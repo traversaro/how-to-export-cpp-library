@@ -55,3 +55,7 @@ build*/
 xcodeenvvar.txt
 .vs/
 CMakeSettings.json
+
+# pixi environments
+.pixi
+*.egg-info

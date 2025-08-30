@@ -1,0 +1,56 @@
+[project]
+authors = ["Silvio <silvio.traversaro@iit.it>"]
+channels = ["conda-forge"]
+description = "Add a short description here"
+name = "how-to-export-cpp-library"
+platforms = ["linux-64", "linux-aarch64", "win-64", "osx-64", "osx-arm64"]
+
+[target.win.activation.env]
+CMAKE_INSTALL_PREFIX = "%CONDA_PREFIX%\\Library"
+
+[target.unix.activation.env]
+CMAKE_INSTALL_PREFIX = "$CONDA_PREFIX"
+
+[tasks]
+configure = { cmd = [
+    "cmake",
+    "-DCMAKE_BUILD_TYPE=Release",
+    "-DBUILD_TESTING:BOOL=ON",
+    # Use the cross-platform Ninja generator
+    "-G",
+    "Ninja",
+    # The source is in the root directory
+    "-S",
+    ".",
+    # We wanna build in the .build directory
+    "-B",
+    ".build",
+]}
+
+build = { cmd = "cmake --build .build --config Release", depends-on = ["configure"] }
+test = { cmd = "ctest --test-dir .build --build-config Release --output-on-failure", depends-on = ["build"] }
+install = { cmd = ["cmake", "--install", ".build", "--config", "Release"], depends-on = ["build"] }
+uninstall = { cmd = ["cmake", "--build", ".build", "--target", "uninstall"]}
+
+[dependencies]
+cmake = "*"
+c-compiler = "*"
+cxx-compiler = "*"
+ninja = "*"
+pkg-config = "*"
+
+[target.linux.dependencies]
+valgrind = "*"
+
+[feature.bazel]
+
+[feature.bazel.dependencies]
+bazel = "*"
+
+[feature.bazel.tasks]
+build-bazel = "bazel build -s //..."
+test-bazel = "bazel test -s //..."
+clean-bazel = "bazel clean"
+
+[environments]
+bazel = ["bazel"]

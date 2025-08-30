@@ -1,0 +1,31 @@
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+cc_library(
+    name = "lib-header-only-template",
+    hdrs = glob(
+        [
+            "src/LibHeaderOnlyTemplateCMake/include/**/*.hpp",
+            "src/LibHeaderOnlyTemplateCMake/include/**/*.h",
+            "src/LibHeaderOnlyTemplateCMake/include/**/*.tpp",
+        ],
+    ),
+    includes = ["src/LibHeaderOnlyTemplateCMake/include"],
+    visibility = ["//visibility:public"],
+    deps = [],
+)
+
+
+cc_library(
+    name = "lib-template",
+    srcs = glob(["src/LibTemplateCMake/src/**/*.cpp"]),
+    hdrs = glob(
+        [
+            "src/LibTemplateCMake/include/**/*.hpp",
+            "src/LibTemplateCMake/include/**/*.h",
+            "src/LibTemplateCMake/include/**/*.tpp",
+        ],
+    ),
+    includes = ["src/LibTemplateCMake/include"],
+    visibility = ["//visibility:public"],
+    deps = [],
+)
